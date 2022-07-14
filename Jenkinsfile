@@ -14,6 +14,25 @@ pipeline{
 
 			}
 		}
+		stage('Upload Artifacts to Nexus'){
+			steps{
+				nexusArtifactUploader artifacts: [
+				[
+				artifactId: 'mulepoc',
+				classifier: '',
+				file: 'target/mulepoc-1.0.0-SNAPSHOT-mule-application.jar',
+				type: 'war'
+				]
+				], 
+				credentialsId: 'nexus',
+				groupId: 'com.mycompany',
+				nexusUrl: 'localhost:8081/nexus/content/repositories/muleRepo/',
+				nexusVersion: 'nexus3',
+				protocol: 'http',
+				repository: 'muleApplications',
+				version: '1.0.0-SNAPSHOT'
+			}
+		}
 		stage('Deploy to Stage'){
 			environment{
                 	anypoint_userName = credentials('anypoint_usrName')
