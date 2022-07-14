@@ -9,7 +9,7 @@ pipeline{
 				[
 				artifactId: 'mulepoc',
 				classifier: '',
-				file: 'target/mulepoc-1.0.0-SNAPSHOT-mule-application.jar',
+				file: 'target/mulepoc-1.0.0-mule-application.jar',
 				type: 'war'
 				]
 				], 
