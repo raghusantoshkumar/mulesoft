@@ -9,7 +9,19 @@ pipeline{
 				bat "mvn -Dmaven.test.failure.ignore-true clean package"
 			}
 		}
-	    stage('Upload Artifacts to Nexus'){
+		stage('Deploy to Dev'){
+			environment{
+                	anypoint_userName = credentials('anypoint_usrName')
+			            anypoint_passwrd = credentials('anypoint_password')
+            		}
+			steps{
+				bat 'echo "Deploy into Dev"'
+				git branch: 'devlop', credentialsId: '266a2115-b2ac-4e4d-bb8d-312b7d7249d5', url: 'https://github.com/raghusantoshkumar/mulesoft.git'
+				bat "mvn -Dmaven.test.failure.ignore-true clean deploy -DmuleDeploy -DskipTests -Dmule.version=4.4.0 -Danypoint.username=$anypoint_userName -Danypoint.password=$anypoint_passwrd -Denv=Sandbox -Dappname=mulePocJenkin -Dbusiness=concentrix -DvCore=Micro -Dworkers=1 -DaltDeploymentRepository=myinternalrepo::default::file:///C:/muleRepo"
+
+			}
+		}
+		stage('Upload Artifacts to Nexus'){
 			steps{
 				nexusArtifactUploader artifacts: [
 				[
@@ -26,18 +38,6 @@ pipeline{
 				protocol: 'http',
 				repository: 'muleApplications',
 				version: '1.0.0'
-			}
-		}
-		stage('Deploy to Dev'){
-			environment{
-                	anypoint_userName = credentials('anypoint_usrName')
-			            anypoint_passwrd = credentials('anypoint_password')
-            		}
-			steps{
-				bat 'echo "Deploy into Dev"'
-				git branch: 'devlop', credentialsId: '266a2115-b2ac-4e4d-bb8d-312b7d7249d5', url: 'https://github.com/raghusantoshkumar/mulesoft.git'
-				bat "mvn -Dmaven.test.failure.ignore-true clean deploy -DmuleDeploy -DskipTests -Dmule.version=4.4.0 -Danypoint.username=$anypoint_userName -Danypoint.password=$anypoint_passwrd -Denv=Sandbox -Dappname=mulePocJenkin -Dbusiness=concentrix -DvCore=Micro -Dworkers=1 -DaltDeploymentRepository=myinternalrepo::default::file:///C:/muleRepo"
-
 			}
 		}
 		stage('Deploy to Stage'){
