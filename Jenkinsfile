@@ -3,6 +3,12 @@ pipeline{
 	
 	stages{
 	
+	    stage('Build'){
+			steps{
+				git branch: 'devlop', credentialsId: '266a2115-b2ac-4e4d-bb8d-312b7d7249d5', url: 'https://github.com/raghusantoshkumar/mulesoft.git'
+				bat "mvn -Dmaven.test.failure.ignore-true clean package"
+			}
+		}
 	    stage('Upload Artifacts to Nexus'){
 			steps{
 				nexusArtifactUploader artifacts: [
